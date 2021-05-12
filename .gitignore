@@ -1,3 +1,8 @@
 jsonFiles/
 temp/
 testFiles/
+*.docx
+*.csv
+*.json
+*.txt
+*.jar
