@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE LIMES SYSTEM "limes.dtd">
+<LIMES>
+	<PREFIX>
+		<NAMESPACE>http://linkedgeodata.org/meta/</NAMESPACE>
+		<LABEL>lmeta</LABEL>
+	</PREFIX>
+	<PREFIX>
+		<NAMESPACE>http://www.opengis.net/ont/geosparql#</NAMESPACE>
+		<LABEL>geos</LABEL>
+	</PREFIX>
+    <PREFIX>
+	   	<NAMESPACE>https://graffiti.data.dice-research.org/ontology/</NAMESPACE>
+	   	<LABEL>grfo</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>https://graffiti.data.dice-research.org/graffiti#</NAMESPACE>
+        <LABEL>grfp</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://www.w3.org/2002/07/owl#</NAMESPACE>
+        <LABEL>owl</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://dbpedia.org/ontology/</NAMESPACE>
+        <LABEL>dbpediaOwl</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://www.w3.org/2000/01/rdf-schema#</NAMESPACE>
+        <LABEL>rdfs</LABEL>
+    </PREFIX>
+	<PREFIX>
+        <NAMESPACE>http://geovocab.org/spatial#</NAMESPACE>
+        <LABEL>spatial</LABEL>
+    </PREFIX>
+    <PREFIX>
+	<NAMESPACE>http://linkedgeodata.org/ontology/</NAMESPACE>
+	<LABEL>lgdo</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://linkedgeodata.org/ontology/addr%3A</NAMESPACE>
+        <LABEL>addr</LABEL>
+    </PREFIX>
+
+	<SOURCE>
+		<ID>graffiti</ID>
+		<ENDPOINT>rdfGraffiti_v4.ttl</ENDPOINT>
+		<VAR>?x</VAR>
+		<PAGESIZE>-1</PAGESIZE>
+		<RESTRICTION>?x a grfo:Graffiti</RESTRICTION>
+		<RESTRICTION>?x grfp:hasLocation ?s</RESTRICTION>
+		<RESTRICTION>?s a grfo:State</RESTRICTION>
+		<RESTRICTION>?s rdfs:label ?cityName</RESTRICTION>
+		<PROPERTY>grfp:locationStreet RENAME streetName</PROPERTY>
+		<TYPE>TURTLE</TYPE>
+	</SOURCE>
+
+
+	<TARGET>
+		<ID>geonames</ID>
+		<ENDPOINT>http://sparql.cs.upb.de:8890/sparql</ENDPOINT>
+		<GRAPH>geonames</GRAPH>
+		<VAR>?y</VAR>
+		<PAGESIZE>2000</PAGESIZE>
+		<RESTRICTION>?y &lt;http://www.geonames.org/ontology#countryCode&gt; "DE"</RESTRICTION>
+		<RESTRICTION>?y &lt;http://www.geonames.org/ontology#parentADM2&gt; &lt;http://sws.geonames.org/2886241/&gt;</RESTRICTION>
+		<RESTRICTION>?y &lt;http://www.geonames.org/ontology#featureClass&gt; &lt;http://www.geonames.org/ontology#S&gt;</RESTRICTION>
+		<PROPERTY>geonames:alternateName RENAME name</PROPERTY>
+		<PROPERTY>wgs84_pos:lat</PROPERTY>
+		<PROPERTY>wgs84_pos:long</PROPERTY>
+		<FUNCTION>toWktPoint(wgs84_pos:lat, wgs84_pos:long) RENAME polygon</FUNCTION>
+	</TARGET>
+
+
+	<METRIC>AND(jaccard(cityName, y.cityName)|0.9,jaccard(x.streetName, y.streetName)|0.9)</METRIC>
+	<ACCEPTANCE>
+		<THRESHOLD>0.6</THRESHOLD>
+		<FILE>accepted.nt</FILE>
+		<RELATION>owl:sameAs</RELATION>
+	</ACCEPTANCE>
+
+	<REVIEW>
+		<THRESHOLD>0.5</THRESHOLD>
+		<FILE>to_review.nt</FILE>
+		<RELATION>lgdo:near</RELATION>
+	</REVIEW>
+
+	<EXECUTION>
+		<REWRITER>default</REWRITER>
+		<PLANNER>default</PLANNER>
+		<ENGINE>owl:sameAs</ENGINE>
+	</EXECUTION>
+
+	<OUTPUT>NT</OUTPUT>
+</LIMES>
