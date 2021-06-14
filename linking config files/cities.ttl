@@ -1,0 +1,284 @@
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ns1:	<https://graffiti.data.dice-research.org/ontology/> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ns4:	<https://graffiti.data.dice-research.org/resource/> .
+@prefix ns5:	<https://graffiti.data.dice-research.org/resource/Heidelberg/> .
+@prefix ns6:	<https://graffiti.data.dice-research.org/resource/Ludwigshafen/> .
+
+ns4:
+	rdf:type	ns1:State ;
+	rdfs:label	""^^xsd:string , " "^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Altlu\u00DFheim>
+	rdf:type	ns1:State ;
+	rdfs:label	"Altlu\u00DFheim"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Br\u00FChl>
+	rdf:type	ns1:State ;
+	rdfs:label	"Br\u00FChl"^^xsd:string .
+ns4:Edingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Edingen"^^xsd:string .
+ns4:Edingen-Neckarhausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Edingen-Neckarhausen"^^xsd:string , "Edingen-Neckarhausen, Ortsteil Neu-Edingen"^^xsd:string .
+ns4:Heddesheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Heddesheim"^^xsd:string .
+ns5:Wieblingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Heidelberg/Wieblingen"^^xsd:string .
+ns4:Hockenheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Hockenheim"^^xsd:string .
+ns4:Ilvesheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Ilvesheim"^^xsd:string .
+ns4:Ladenburg
+	rdf:type	ns1:State ;
+	rdfs:label	"Ladenburg"^^xsd:string .
+ns4:Ludwigshafen
+	rdf:type	ns1:State ;
+	rdfs:label	"Ludwigshafen"^^xsd:string .
+ns4:Manheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Manheim"^^xsd:string .
+ns4:Mannheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Mannheim  "^^xsd:string , " Mannheim"^^xsd:string , "Mannheim"^^xsd:string , "Mannheim "^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/M\u00FCnchen>
+	rdf:type	ns1:State ;
+	rdfs:label	"M\u00FCnchen"^^xsd:string .
+ns4:Neu-Edingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Neu-Edingen"^^xsd:string .
+ns4:Schwetzingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Schwetzingen"^^xsd:string .
+ns4:Viernheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Viernheim"^^xsd:string , "Viernheim "^^xsd:string .
+ns4:Ketsch
+	rdf:type	ns1:State ;
+	rdfs:label	"Ketsch"^^xsd:string .
+ns4:Ivesheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Ivesheim"^^xsd:string .
+ns4:Lampertheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Lampertheim"^^xsd:string .
+ns4:Heidelberg
+	rdf:type	ns1:State ;
+	rdfs:label	"Heidelberg"^^xsd:string .
+ns4:Hemsbach
+	rdf:type	ns1:State ;
+	rdfs:label	"Hemsbach"^^xsd:string .
+ns4:Hirschberg
+	rdf:type	ns1:State ;
+	rdfs:label	"Hirschberg"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/K\u00F6ln>
+	rdf:type	ns1:State ;
+	rdfs:label	"K\u00F6ln"^^xsd:string .
+ns4:Ladenbrug
+	rdf:type	ns1:State ;
+	rdfs:label	"Ladenbrug"^^xsd:string .
+ns4:Leutershausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Leutershausen"^^xsd:string .
+ns4:Leverkusen
+	rdf:type	ns1:State ;
+	rdfs:label	"Leverkusen"^^xsd:string .
+ns4:Schriesheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Schriesheim"^^xsd:string .
+ns4:Weinheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Weinheim"^^xsd:string .
+ns4:Bobenheim-Roxheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Bobenheim-Roxheim"^^xsd:string .
+ns4:Dossenheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Dossenheim"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Gro\u00DFsachsen>
+	rdf:type	ns1:State ;
+	rdfs:label	"Gro\u00DFsachsen"^^xsd:string .
+ns4:Handschuhsheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Handschuhsheim"^^xsd:string .
+ns6:Frankenthal
+	rdf:type	ns1:State ;
+	rdfs:label	"Ludwigshafen/Frankenthal"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/L\u00FCtzelsachsen>
+	rdf:type	ns1:State ;
+	rdfs:label	"L\u00FCtzelsachsen"^^xsd:string .
+ns4:Edingen-Eckarhausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Edingen-Eckarhausen"^^xsd:string .
+ns4:Neckarhausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Neckarhausen"^^xsd:string .
+ns4:Eppelheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Eppelheim "^^xsd:string , "Eppelheim"^^xsd:string .
+ns4:Heddesheim-Muckensturm
+	rdf:type	ns1:State ;
+	rdfs:label	"Heddesheim-Muckensturm"^^xsd:string .
+ns4:Laudenbach
+	rdf:type	ns1:State ;
+	rdfs:label	"Laudenbach"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/N\u00FCrnberg>
+	rdf:type	ns1:State ;
+	rdfs:label	"N\u00FCrnberg"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/M\u00FCnster>
+	rdf:type	ns1:State ;
+	rdfs:label	"M\u00FCnster"^^xsd:string .
+ns4:Neuss
+	rdf:type	ns1:State ;
+	rdfs:label	"Neuss"^^xsd:string .
+ns4:Nieheim
+	rdf:type	ns1:State ;
+	rdfs:label	"Nieheim"^^xsd:string .
+ns4:Nordhausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Nordhausen"^^xsd:string .
+ns4:Oberhausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Oberhausen"^^xsd:string .
+ns4:Offenbach
+	rdf:type	ns1:State ;
+	rdfs:label	"Offenbach"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Osnabr\u00FCck>
+	rdf:type	ns1:State ;
+	rdfs:label	"Osnabr\u00FCck"^^xsd:string .
+ns4:Radevormwald
+	rdf:type	ns1:State ;
+	rdfs:label	"Radevormwald"^^xsd:string .
+ns4:Ratingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Ratingen"^^xsd:string .
+ns4:Regensburg
+	rdf:type	ns1:State ;
+	rdfs:label	"Regensburg"^^xsd:string .
+ns4:Rheydt
+	rdf:type	ns1:State ;
+	rdfs:label	"Rheydt"^^xsd:string .
+ns4:Schwerte
+	rdf:type	ns1:State ;
+	rdfs:label	"Schwerte"^^xsd:string .
+ns4:Selm
+	rdf:type	ns1:State ;
+	rdfs:label	"Selm"^^xsd:string .
+ns4:Solingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Solingen"^^xsd:string .
+ns4:Stuttgart
+	rdf:type	ns1:State ;
+	rdfs:label	"Stuttgart"^^xsd:string .
+ns4:Unna
+	rdf:type	ns1:State ;
+	rdfs:label	"Unna"^^xsd:string .
+ns4:Werdohl
+	rdf:type	ns1:State ;
+	rdfs:label	"Werdohl"^^xsd:string .
+ns4:Werther
+	rdf:type	ns1:State ;
+	rdfs:label	"Werther"^^xsd:string .
+ns4:Wetzlar
+	rdf:type	ns1:State ;
+	rdfs:label	"Wetzlar"^^xsd:string .
+ns4:Wiesbaden
+	rdf:type	ns1:State ;
+	rdfs:label	"Wiesbaden"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/F\u00FCrstenfeldbruck>
+	rdf:type	ns1:State ;
+	rdfs:label	"F\u00FCrstenfeldbruck"^^xsd:string .
+ns4:Germering
+	rdf:type	ns1:State ;
+	rdfs:label	"Germering"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Gr\u00F6benzell>
+	rdf:type	ns1:State ;
+	rdfs:label	"Gr\u00F6benzell"^^xsd:string .
+ns4:Holzkirchen
+	rdf:type	ns1:State ;
+	rdfs:label	"Holzkirchen"^^xsd:string .
+ns4:Olching
+	rdf:type	ns1:State ;
+	rdfs:label	"Olching"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Saarbr\u00FCcken>
+	rdf:type	ns1:State ;
+	rdfs:label	"Saarbr\u00FCcken"^^xsd:string .
+ns4:Wolfratshausen
+	rdf:type	ns1:State ;
+	rdfs:label	"Wolfratshausen"^^xsd:string .
+ns4:Altdorf
+	rdf:type	ns1:State ;
+	rdfs:label	"Altdorf"^^xsd:string .
+ns4:Dachau
+	rdf:type	ns1:State ;
+	rdfs:label	"Dachau"^^xsd:string .
+ns4:Aaachen
+	rdf:type	ns1:State ;
+	rdfs:label	"Aaachen"^^xsd:string .
+ns4:Brasov
+	rdf:type	ns1:State ;
+	rdfs:label	"Brasov"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/M\u00F6nchebgladbach>
+	rdf:type	ns1:State ;
+	rdfs:label	"M\u00F6nchebgladbach"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Br\u00FChl-Rohrhof>
+	rdf:type	ns1:State ;
+	rdfs:label	"Br\u00FChl-Rohrhof"^^xsd:string .
+ns4:Aachen
+	rdf:type	ns1:State ;
+	rdfs:label	"Aachen"^^xsd:string .
+ns4:Berlin
+	rdf:type	ns1:State ;
+	rdfs:label	"Berlin"^^xsd:string .
+ns4:Bielefeld
+	rdf:type	ns1:State ;
+	rdfs:label	"Bielefeld"^^xsd:string , "Bielefeld "^^xsd:string .
+ns4:Bremen
+	rdf:type	ns1:State ;
+	rdfs:label	"Bremen"^^xsd:string .
+ns4:Darmstadt
+	rdf:type	ns1:State ;
+	rdfs:label	"Darmstadt"^^xsd:string .
+ns4:Dortmund
+	rdf:type	ns1:State ;
+	rdfs:label	"Dortmund"^^xsd:string .
+ns4:Dresden
+	rdf:type	ns1:State ;
+	rdfs:label	"Dresden"^^xsd:string .
+ns4:ImZug
+	rdf:type	ns1:State ;
+	rdfs:label	"Im Zug"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/Lentstra\u00DFe30K\u00F6ln>
+	rdf:type	ns1:State ;
+	rdfs:label	"Lentstra\u00DFe 30K\u00F6ln"^^xsd:string .
+ns4:Manneim
+	rdf:type	ns1:State ;
+	rdfs:label	"Manneim"^^xsd:string .
+ns4:Minden
+	rdf:type	ns1:State ;
+	rdfs:label	"Minden"^^xsd:string .
+ns4:NeuEdingen
+	rdf:type	ns1:State ;
+	rdfs:label	"Neu Edingen"^^xsd:string .
+ns4:Paderborn
+	rdf:type	ns1:State ;
+	rdfs:label	"Paderborn"^^xsd:string .
+ns4:paderborn
+	rdf:type	ns1:State ;
+	rdfs:label	"paderborn"^^xsd:string .
+<https://graffiti.data.dice-research.org/resource/D\u00FCsseldorf>
+	rdf:type	ns1:State ;
+	rdfs:label	"D\u00FCsseldorf"^^xsd:string .
+ns4:Erlangen
+	rdf:type	ns1:State ;
+	rdfs:label	"Erlangen"^^xsd:string .
+ns4:Essen
+	rdf:type	ns1:State ;
+	rdfs:label	"Essen"^^xsd:string .
+ns4:Feldkirchen
+	rdf:type	ns1:State ;
+	rdfs:label	"Feldkirchen"^^xsd:string .

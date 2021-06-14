@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE LIMES SYSTEM "limes.dtd">
+<LIMES>
+    <PREFIX>
+   	<NAMESPACE>https://graffiti.data.dice-research.org/ontology/</NAMESPACE>
+   	<LABEL>grfo</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://www.wikidata.org/entity/</NAMESPACE>
+        <LABEL>wd</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>https://w3id.org/scholarlydata/ontology/conference-ontology.owl#</NAMESPACE>
+        <LABEL>owl</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://www.w3.org/2011/http#</NAMESPACE>
+        <LABEL>http</LABEL>
+    </PREFIX>
+    <PREFIX>
+        <NAMESPACE>http://www.wikidata.org/prop/direct/</NAMESPACE>
+        <LABEL>wdt</LABEL>
+    </PREFIX>
+    <PREFIX>
+	<NAMESPACE>http://linkedgeodata.org/ontology/</NAMESPACE>
+	<LABEL>lgdo</LABEL>
+    </PREFIX>
+    <PREFIX>
+	<NAMESPACE>http://www.w3.org/2000/01/rdf-schema#</NAMESPACE>
+	<LABEL>rdfs</LABEL>
+    </PREFIX>
+
+	<SOURCE>
+		<ID>graffitiCities</ID>
+		<ENDPOINT>cities.ttl</ENDPOINT>
+		<VAR>?x</VAR>
+		<PAGESIZE>1000</PAGESIZE>
+		<RESTRICTION>?x a grfo:State</RESTRICTION>
+		<PROPERTY>rdfs:label RENAME name</PROPERTY>
+		<TYPE>TURTLE</TYPE>
+	</SOURCE>
+
+
+	<TARGET>
+		<ID>wikidata</ID>
+		<ENDPOINT>https://query.wikidata.org/sparql</ENDPOINT>
+		<VAR>?y</VAR>
+		<PAGESIZE>2000</PAGESIZE>
+		<RESTRICTION>?y wdt:P17 wd:Q183</RESTRICTION>
+		<RESTRICTION>?y wdt:P31/wdt:P279* wd:Q515</RESTRICTION>
+		<PROPERTY>rdfs:label AS nolang RENAME name</PROPERTY>
+	</TARGET>
+
+
+	<METRIC>jaccard(x.name, y.name)|0.5</METRIC>
+	<ACCEPTANCE>
+		<THRESHOLD>0.6</THRESHOLD>
+		<FILE>accepted.nt</FILE>
+		<RELATION>owl:sameAs</RELATION>
+	</ACCEPTANCE>
+
+	<REVIEW>
+		<THRESHOLD>0.5</THRESHOLD>
+		<FILE>to_review.nt</FILE>
+		<RELATION>lgdo:near</RELATION>
+	</REVIEW>
+
+	<EXECUTION>
+		<REWRITER>default</REWRITER>
+		<PLANNER>default</PLANNER>
+		<ENGINE>owl:sameAs</ENGINE>
+	</EXECUTION>
+
+	<OUTPUT>NT</OUTPUT>
+</LIMES>
