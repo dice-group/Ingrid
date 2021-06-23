@@ -26,7 +26,16 @@ now = datetime.now().strftime("%Y-%m-%d")
 pathName = 'jsonFiles_'+now
 os.mkdir(pathName)
 
-token='example'
+# get session token
+# GET /api/v1/session
+t = requests.get('https://media.uni-paderborn.de/api/v1/session', params={})
+token = t.json()['token']
+
+
+# auth
+# POST /api/v1/session/authenticate?token=<token>[&method=<method>][&login=<login>&password=<password>][&success=<success>][&error=<error>][&response_type=<response_type>][&remember_me={1|0}][&log_event={1|0}]
+auth = requests.post('https://media.uni-paderborn.de/api/v1/session/authenticate?token='+token, params={'login': '', 'password': ''})
+# print(auth.json())
 
 url = 'https://media.uni-paderborn.de/api/v1/search'
 num = 0
