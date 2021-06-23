@@ -190,14 +190,23 @@ def handleFile(filename):
 								else:
 									k = k.replace('_', '')
 									if k == 'text':
-										k = 'hasText'
+										# k = 'hasText'
 										symbols = re.findall('\{[A-Z]*\}', textGraffiti, re.IGNORECASE)
 										if symbols:
-											print(symbols)
+											# print(symbols)item
 											for symbol in symbols:
 												g.add( (dice, graffiti.hasSymbol, ndice["symbol_"+symbol.replace("{","").replace("}","").upper()]) )    
 									if k != 'editor' and k != 'spruehercrew':
-										g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=datatype)) )
+										if k == 'text' or k == 'item':
+										   if '_nested:graffiti__sprachen' in graffitiInfo:
+											   langFromGraffiti = graffitiInfo['_nested:graffiti__sprachen'][0]['sprache']['_standard']['1']['text']['de-DE']
+											   if '-' in langFromGraffiti:
+												   lang = langFromGraffiti.split('-')[0].strip()
+												   if k == 'text':
+												      k = 'hasText'
+												   g.add( (dice, graffiti[k], Literal(textGraffiti,lang=lang)) )
+										else:
+											g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=datatype)) )
 
  
 
