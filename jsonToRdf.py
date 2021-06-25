@@ -252,7 +252,7 @@ for filename in os.listdir(dirname):
 #handleFile('graffiti_v3.json')
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("rdfGraffiti_v6.ttl", "w")
+f = open("rdfGraffiti.ttl", "w")
 # f = open("rdfGraffiti_v5.ttl", "w")
 f.write(serilizedRDF.decode("utf-8"))
 g = Graph()
