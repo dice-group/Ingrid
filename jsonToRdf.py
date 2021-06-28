@@ -110,12 +110,13 @@ def handleFile(filename):
 				if "_nested" in k:
 					if k in graffitiInfo:
 						if len(graffitiInfo[k]) != 0:
-							for subObj in graffitiInfo[k][0].keys():
-							   textGraffiti = graffitiInfo[k][0][subObj]['_standard']['1']['text']['de-DE']
-							   subObj = transalate(subObj)
-							   if subObj == 'colour':
-								   subObj = 'hasColour'
-							   g.add( (dice, graffiti[subObj], Literal(textGraffiti,datatype=XSD.string)) )
+							for elem in graffitiInfo[k]:
+								for subObj in elem.keys():
+								   textGraffiti = elem[subObj]['_standard']['1']['text']['de-DE']
+								   subObj = transalate(subObj)
+								   if subObj == 'colour':
+									   subObj = 'hasColour'
+								   g.add( (dice, graffiti[subObj], Literal(textGraffiti,datatype=XSD.string)) )
 				else: 
 					# print(k)
 					if '_standard' in str(graffitiInfo[k]):
