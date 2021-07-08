@@ -72,144 +72,160 @@ def handleFile(filename):
 	# authors = datastore["metadata"]["authors"]
 	# body_text = datastore["body_text"]
 	# bib_entries = datastore["bib_entries"]
-	objects = datastore["objects"]
+	if "objects" in datastore:
+		objects = datastore["objects"]
 
 
-	g.namespace_manager.bind("grfr", ndice)
-	g.namespace_manager.bind("grfo", cvdo)
-	g.namespace_manager.bind("schema", schema)
-	g.namespace_manager.bind("dcterms", DCTERMS)
-	g.namespace_manager.bind("foaf", FOAF)
-	g.namespace_manager.bind("vcard", vcard)
-	g.namespace_manager.bind("bibtex", bibtex)
-	g.namespace_manager.bind("swc", swc)
-	g.namespace_manager.bind("prov", prov)
-	g.namespace_manager.bind("nif", nif)
-	g.namespace_manager.bind("its", its)
-	g.namespace_manager.bind("sdo", sdo)
-	g.namespace_manager.bind("bibo", bibo)
-	g.namespace_manager.bind("fabio", fabio)
-	g.namespace_manager.bind("owl", OWL)
+		g.namespace_manager.bind("grfr", ndice)
+		g.namespace_manager.bind("grfo", cvdo)
+		g.namespace_manager.bind("schema", schema)
+		g.namespace_manager.bind("dcterms", DCTERMS)
+		g.namespace_manager.bind("foaf", FOAF)
+		g.namespace_manager.bind("vcard", vcard)
+		g.namespace_manager.bind("bibtex", bibtex)
+		g.namespace_manager.bind("swc", swc)
+		g.namespace_manager.bind("prov", prov)
+		g.namespace_manager.bind("nif", nif)
+		g.namespace_manager.bind("its", its)
+		g.namespace_manager.bind("sdo", sdo)
+		g.namespace_manager.bind("bibo", bibo)
+		g.namespace_manager.bind("fabio", fabio)
+		g.namespace_manager.bind("owl", OWL)
 
-	g.namespace_manager.bind("grfp", graffiti)
+		g.namespace_manager.bind("grfp", graffiti)
 
-	exclusions = set(['_id_parent', '_pool', ':inner', ':inner:all'])
+		exclusions = set(['_id_parent', '_pool', ':inner', ':inner:all'])
 
-	for obj in objects:
-		dice = URIRef(resourse+str(obj["_system_object_id"]))
-		if 'graffiti' in obj:
-			graffitiInfo = obj['graffiti']
-			# for grkey, value in graffitiInfo.items():
-			g.add( (dice, RDF.type, cvdo.Graffiti) )
+		for obj in objects:
+			dice = URIRef(resourse+str(obj["_system_object_id"]))
+			if len(obj['_collections']):
+				print(obj['_collections'])
+			if '_last_modified' in obj:
+				g.add( (dice, graffiti.lastModified, Literal(obj['_last_modified'],datatype=XSD.dateTime)) )
+			if '_created' in obj:
+				g.add( (dice, graffiti.wasCreated, Literal(obj['_created'],datatype=XSD.dateTime)) )
+			if '_tags' in obj:
+				tags = obj['_tags']
+				for tag in tags:
+					if "_id" in tag:
+						g.add( (dice, graffiti.hasTagId,  Literal(str(tag['_id']),datatype=XSD.string)) )
+					if "name" in tag:
+						tagName = tag['_name']['de-DE']
+						g.add( (dice, graffiti.hasTagName,  Literal(tagName,datatype=XSD.string)) )
+			if 'graffiti' in obj:
+				graffitiInfo = obj['graffiti']
+				# for grkey, value in graffitiInfo.items():
+				g.add( (dice, RDF.type, cvdo.Graffiti) )
 
-			
+				
 
-			# print(graffitiInfo.keys())
-			keys = graffitiInfo.keys()
-			for k in keys:
-				if "_nested" in k:
-					if k in graffitiInfo:
-						if len(graffitiInfo[k]) != 0:
-							for elem in graffitiInfo[k]:
-								for subObj in elem.keys():
-								   textGraffiti = elem[subObj]['_standard']['1']['text']['de-DE']
-								   subObj = transalate(subObj)
-								   if subObj == 'colour':
-									   subObj = 'hasColour'
-								   g.add( (dice, graffiti[subObj], Literal(textGraffiti,datatype=XSD.string)) )
-				else: 
-					# print(k)
-					if '_standard' in str(graffitiInfo[k]):
-						textGraffiti = graffitiInfo[k]['_standard']['1']['text']['de-DE']
-						k = transalate(k)
-						if k == 'inventory':
-							k = 'inInventory'
-						g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=XSD.string)) )
-					else:
-						textGraffiti = graffitiInfo[k]
-						if k == '_id' or k == '_version':
-							datatype = XSD.nonNegativeInteger
-						else:
-							if k == 'aufnahmedatum' or k == 'bearbeitungsdatum':
-								datatype = XSD.date
-								textGraffiti = textGraffiti['value']
-							else:  
-								if k == 'originalfoto':
-									datatype = XSD.boolean
-								else:  
-									datatype = XSD.string
-						if k not in exclusions:
+				# print(graffitiInfo.keys())
+				keys = graffitiInfo.keys()
+				for k in keys:
+					if "_nested" in k:
+						if k in graffitiInfo:
+							if len(graffitiInfo[k]) != 0:
+								for elem in graffitiInfo[k]:
+									for subObj in elem.keys():
+									   textGraffiti = elem[subObj]['_standard']['1']['text']['de-DE']
+									   subObj = transalate(subObj)
+									   if subObj == 'colour':
+										   subObj = 'hasColour'
+									   g.add( (dice, graffiti[subObj], Literal(textGraffiti,datatype=XSD.string)) )
+					else: 
+						# print(k)
+						if '_standard' in str(graffitiInfo[k]):
+							textGraffiti = graffitiInfo[k]['_standard']['1']['text']['de-DE']
 							k = transalate(k)
-							if k == 'locationStadt':
-								state = textGraffiti.split(',')[0].strip().replace(" ","")
-								g.add( (dice, graffiti.hasLocation, ndice[state]) )
-								g.add( (ndice[state], RDF.type, cvdo.State) )
-								g.add( (ndice[state], RDFS.label, Literal(textGraffiti,datatype=datatype)) )
+							if k == 'inventory':
+								k = 'inInventory'
+							g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=XSD.string)) )
+						else:
+							textGraffiti = graffitiInfo[k]
+							if k == '_id' or k == '_version':
+								datatype = XSD.nonNegativeInteger
 							else:
-								if k == 'editor':
-									annotator = textGraffiti.replace(" ","")
-									g.add( (dice, graffiti.annotator, ndice[annotator]) )
-									g.add( (ndice[annotator], RDF.type, FOAF.Person) )
-									nameArr = textGraffiti.split(" ")
-									if len(nameArr) == 2:
-										g.add( (ndice[annotator], FOAF.firstName, Literal(nameArr[0],datatype=datatype)) )
-										g.add( (ndice[annotator], FOAF.lastName, Literal(nameArr[1],datatype=datatype)) )
-									else:
-										g.add( (ndice[annotator], FOAF.givenName, Literal(nameArr[0],datatype=datatype)) )
-								if k == 'spruehercrew':
-									crewArr = textGraffiti.split('|')
-									for crew in crewArr:
-										crewName = re.sub(r'"|„|“|\?|<|\`| ', '', crew).upper().strip()
-										originalCrewName = re.sub(r'"|\?|„|“', '', crew).strip()
-										g.add( (dice, graffiti[k], ndice[crewName]) )
-										g.add( (ndice[crewName], RDF.type, cvdo.GraffitiSprayercrew) )
-										g.add( (ndice[crewName], RDFS.label, Literal(originalCrewName,datatype=datatype)) )
-								# datei
-								if k == 'file':
-									# print(textGraffiti)
-									versions = textGraffiti[0]['versions']
-									for v in versions:
-										# print(v)
-										if v == 'preview_watermark':
-											twoWords = v.split('_')
-											v1 = twoWords[0].capitalize()+twoWords[1].capitalize()
-											predicate = 'has'+v1+'File'
-											imageIdObj = v1+'_'+str(textGraffiti[0]['_id'])
-										else:
-											predicate = 'has'+v.capitalize()+'File'
-											imageIdObj = v.capitalize()+'_'+str(textGraffiti[0]['_id'])
-										if 'url' in versions[v]:
-											g.add( (dice, graffiti[predicate], ndice[imageIdObj]) )
-											g.add( (ndice[imageIdObj], RDF.type, cvdo.ImageFile) )
-											g.add( (ndice[imageIdObj], graffiti.hasUri, URIRef(versions[v]['url'])) )
-											g.add( (ndice[imageIdObj], schema.width, Literal(versions[v]['width'],datatype=XSD.nonNegativeInteger)) )
-											g.add( (ndice[imageIdObj], schema.height, Literal(versions[v]['height'],datatype=XSD.nonNegativeInteger)) )
-											g.add( (ndice[imageIdObj], graffiti.extension, Literal(versions[v]['extension'],datatype=XSD.string)) )
-											if 'aspect_ratio' in versions[v]:
-												g.add( (ndice[imageIdObj], graffiti.aspect_ratio, Literal(versions[v]['aspect_ratio'],datatype=XSD.float)) )
-
+								if k == 'aufnahmedatum' or k == 'bearbeitungsdatum':
+									datatype = XSD.date
+									textGraffiti = textGraffiti['value']
+								else:  
+									if k == 'originalfoto':
+										datatype = XSD.boolean
+									else:  
+										datatype = XSD.string
+							if k not in exclusions:
+								k = transalate(k)
+								if k == 'locationStadt':
+									state = textGraffiti.split(',')[0].strip().replace(" ","")
+									g.add( (dice, graffiti.hasLocation, ndice[state]) )
+									g.add( (ndice[state], RDF.type, cvdo.State) )
+									g.add( (ndice[state], RDFS.label, Literal(textGraffiti,datatype=datatype)) )
 								else:
-									k = k.replace('_', '')
-									if k == 'text':
-										# k = 'hasText'
-										symbols = re.findall('\{[A-Z]*\}', textGraffiti, re.IGNORECASE)
-										if symbols:
-											# print(symbols)item
-											for symbol in symbols:
-												g.add( (dice, graffiti.hasSymbol, ndice["symbol_"+symbol.replace("{","").replace("}","").upper()]) )    
-									if k != 'editor' and k != 'spruehercrew':
-										if k == 'text' or k == 'item':
-										   if '_nested:graffiti__sprachen' in graffitiInfo:
-											   langFromGraffiti = graffitiInfo['_nested:graffiti__sprachen'][0]['sprache']['_standard']['1']['text']['de-DE']
-											   if '-' in langFromGraffiti:
-												   lang = langFromGraffiti.split('-')[0].strip()
-												   if k == 'text':
-												      k = 'hasText'
-												   g.add( (dice, graffiti[k], Literal(textGraffiti,lang=lang)) )
+									if k == 'editor':
+										annotator = textGraffiti.replace(" ","")
+										g.add( (dice, graffiti.annotator, ndice[annotator]) )
+										g.add( (ndice[annotator], RDF.type, FOAF.Person) )
+										nameArr = textGraffiti.split(" ")
+										if len(nameArr) == 2:
+											g.add( (ndice[annotator], FOAF.firstName, Literal(nameArr[0],datatype=datatype)) )
+											g.add( (ndice[annotator], FOAF.lastName, Literal(nameArr[1],datatype=datatype)) )
 										else:
-											g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=datatype)) )
+											g.add( (ndice[annotator], FOAF.givenName, Literal(nameArr[0],datatype=datatype)) )
+									if k == 'spruehercrew':
+										crewArr = textGraffiti.split('|')
+										for crew in crewArr:
+											crewName = re.sub(r'"|„|“|\?|<|\`| ', '', crew).upper().strip()
+											originalCrewName = re.sub(r'"|\?|„|“', '', crew).strip()
+											if(originalCrewName != ""):
+												g.add( (dice, graffiti[k], ndice[crewName]) )
+												g.add( (ndice[crewName], RDF.type, cvdo.GraffitiSprayercrew) )
+												g.add( (ndice[crewName], RDFS.label, Literal(originalCrewName,datatype=datatype)) )
+									# datei
+									if k == 'file':
+										# print(textGraffiti)
+										versions = textGraffiti[0]['versions']
+										for v in versions:
+											# print(v)
+											if v == 'preview_watermark':
+												twoWords = v.split('_')
+												v1 = twoWords[0].capitalize()+twoWords[1].capitalize()
+												predicate = 'has'+v1+'File'
+												imageIdObj = v1+'_'+str(textGraffiti[0]['_id'])
+											else:
+												predicate = 'has'+v.capitalize()+'File'
+												imageIdObj = v.capitalize()+'_'+str(textGraffiti[0]['_id'])
+											if 'url' in versions[v]:
+												g.add( (dice, graffiti[predicate], ndice[imageIdObj]) )
+												g.add( (ndice[imageIdObj], RDF.type, cvdo.ImageFile) )
+												g.add( (ndice[imageIdObj], graffiti.hasUri, URIRef(versions[v]['url'])) )
+												g.add( (ndice[imageIdObj], schema.width, Literal(versions[v]['width'],datatype=XSD.nonNegativeInteger)) )
+												g.add( (ndice[imageIdObj], schema.height, Literal(versions[v]['height'],datatype=XSD.nonNegativeInteger)) )
+												g.add( (ndice[imageIdObj], graffiti.extension, Literal(versions[v]['extension'],datatype=XSD.string)) )
+												if 'aspect_ratio' in versions[v]:
+													g.add( (ndice[imageIdObj], graffiti.aspect_ratio, Literal(versions[v]['aspect_ratio'],datatype=XSD.float)) )
 
- 
+									else:
+										k = k.replace('_', '')
+										if k == 'text':
+											# k = 'hasText'
+											symbols = re.findall('\{[A-Z]*\}', textGraffiti, re.IGNORECASE)
+											if symbols:
+												# print(symbols)item
+												for symbol in symbols:
+													g.add( (dice, graffiti.hasSymbol, ndice["symbol_"+symbol.replace("{","").replace("}","").upper()]) )    
+										if k != 'editor' and k != 'spruehercrew':
+											if k == 'text' or k == 'item':
+											   if '_nested:graffiti__sprachen' in graffitiInfo:
+												   langFromGraffiti = graffitiInfo['_nested:graffiti__sprachen'][0]['sprache']['_standard']['1']['text']['de-DE']
+												   if '-' in langFromGraffiti:
+													   lang = langFromGraffiti.split('-')[0].strip()
+													   if k == 'text':
+													      k = 'hasText'
+													   g.add( (dice, graffiti[k], Literal(textGraffiti,lang=lang)) )
+											else:
+												g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=datatype)) )
+
+	 
 
 	# schema.author
 

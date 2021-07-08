@@ -39,7 +39,7 @@ auth = requests.post('https://media.uni-paderborn.de/api/v1/session/authenticate
 
 url = 'https://media.uni-paderborn.de/api/v1/search'
 num = 0
-for x in my_range(0, 1000000, 1000):
+for x in my_range(0, 130000, 1000):
 
      r = requests.post(url, params={'token': token}, json={'offset': x})
      #print(r.text)
