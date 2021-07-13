@@ -1,18 +1,51 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
+import sys
 
 
-authUrl = 'https://wikis.uni-paderborn.de/graffiti/index.php?title=Spezial:Anmelden&returnto=Informationen zu den Namen (Pseudonymen)'
-auth = requests.post(authUrl, params={'wpName': '', 'wpPassword': '', 'authAction': 'login'})
-print(auth)
+###################################
 
-headers = {
-'Cookie': ''
+S = requests.Session()
+
+URL = "https://wikis.uni-paderborn.de/graffiti/api.php"
+
+PARAMS = {
+    "action": "query",
+    "meta": "tokens",
+    "type": "login",
+    "format": "json"
 }
 
-url = 'https://wikis.uni-paderborn.de/graffiti/Informationen_zu_den_Namen_(Pseudonymen)' #'https://en.wikipedia.org/wiki/List_of_English_football_champions'
-response=requests.get(url, headers=headers)
+R = S.get(url=URL, params=PARAMS)
+# print(R.text)
+DATA = R.json()
+
+LOGIN_TOKEN = DATA['query']['tokens']['logintoken']
+
+# print(LOGIN_TOKEN)
+
+
+PARAMS_1 = {
+    'action':"login",
+    'lgname':"",
+    'lgpassword':"",
+    'lgtoken':LOGIN_TOKEN,
+    'format':"json"
+}
+URL2 = "https://wikis.uni-paderborn.de/graffiti/api.php"
+
+R = S.post(URL2, data=PARAMS_1)
+
+DATA = R
+
+# print(DATA.text)
+######################################
+
+url = sys.argv[1]
+url = 'https://wikis.uni-paderborn.de/graffiti/api.php?action=parse&page=Informationen_zu_den_Namen_(Pseudonymen)&format=json'
+# url = 'https://wikis.uni-paderborn.de/graffiti/Informationen_zu_den_Namen_(Pseudonymen)'
+response=S.get(url)
 
 # print(response.content)
 
@@ -38,12 +71,13 @@ numTable = 0
 for table in tables:
 	table_headers = []
 	for tx in table.find_all('th'):
-		table_headers.append(tx.text.strip())
+		table_headers.append(tx.text.replace("\\n", "").strip())
 	for table_row in table.findAll('tr'):
 		columns = table_row.findAll('td')
 		output_row = []
 		for column in columns:
-			output_row.append(column.text.replace("|", "").replace("\n", "").strip())
+			cell = column.text.replace("|", "").replace("\\n", "").strip()
+			output_row.append(cell)
 		if len(output_row) != 0:
 			output_rows.append(output_row)
 	

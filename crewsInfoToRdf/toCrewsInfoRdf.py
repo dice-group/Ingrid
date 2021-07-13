@@ -9,6 +9,7 @@ import pandas as pd
 from collections import OrderedDict, defaultdict
 import pyreadr
 import pycountry
+import urllib.parse
 
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
@@ -63,6 +64,7 @@ def handleFile():
 
             # strName = str(row['iso3'].split(',')[0].strip())
             strName = str(row['Akronym']).replace("'",'').replace(' ', '')
+            strName = urllib.parse.quote(strName)
             # snakecase to lowerCamelCase
             # strCamelCase = re.sub(r"_(\w)", repl, strName)
             print(strName)
@@ -80,6 +82,7 @@ def handleFile():
                 # preprocessedValue.split(',')
                 for a in annotators:
                     a = a.strip()
+                    a = urllib.parse.quote(a)
                     g.add( (dice, graffiti.annotator, ndice[a]) )
                     g.add( (ndice[a], RDF.type, FOAF.Person) )
                     g.add( (ndice[a], FOAF.givenName, Literal(a,datatype=XSD.string)) )
@@ -104,6 +107,7 @@ def handleFile():
                                 dl = dl.split(":")[1].replace("?","")
                             r = dl.upper()
                             if r != "":
+                                r = urllib.parse.quote(r)
                                 g.add( (dice, graffiti.hasCrewMember, ndice[r]) )
                                 g.add( (ndice[r], RDF.type, cvdo.CrewMember ))
                                 g.add( (ndice[r], RDFS.label, Literal(dl,datatype=XSD.string)) )
@@ -127,7 +131,7 @@ def handleFile():
 
     print('CSV has finished')
 
-reader = pd.read_csv('crew_info.csv', delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
+reader = pd.read_csv('Übersicht Crews.csv', delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
 
 def isnan(value):
     try:
