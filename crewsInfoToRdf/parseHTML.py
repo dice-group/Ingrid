@@ -1,7 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
+import os
 import csv
 import sys
+from datetime import datetime
 
 
 ###################################
@@ -59,7 +61,12 @@ tableNames = {
 	"6": "Übersicht Sprayer, Crews Korpus Polizei München",
 	"7": "Übersicht Sprayer",
 	"8": "Übersicht Lokalisierungen",
+	"9": "Sth"
 }
+
+now = datetime.now().strftime("%Y-%m-%d")
+pathName = 'tables_'+now
+os.mkdir(pathName)
 
 soup=BeautifulSoup(response.content,'lxml')
 
@@ -82,7 +89,7 @@ for table in tables:
 			output_rows.append(output_row)
 	
 	# print(output_rows)
-	with open(tableNames[str(numTable)]+'.csv', 'w') as csvfile:
+	with open(pathName+"/table"+str(numTable)+'.csv', 'w') as csvfile:
 		writer = csv.writer(csvfile, delimiter='|')
 		writer.writerow(table_headers)
 		writer.writerows(output_rows)

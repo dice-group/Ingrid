@@ -30,7 +30,9 @@ graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 
-def handleFile():
+def handleFile(filename):
+    if filename:
+        reader = pd.read_csv(filename, delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
 
 
     g.namespace_manager.bind("grfr", ndice)
@@ -55,7 +57,7 @@ def handleFile():
     # metadata
 
     dice = None
-
+    num = 0
     for row in reader:
         longitude = None
         latitude = None
@@ -63,16 +65,25 @@ def handleFile():
             heading = str(heading)
 
             # strName = str(row['iso3'].split(',')[0].strip())
-            strName = str(row['Akronym']).replace("'",'').replace(' ', '')
-            strName = urllib.parse.quote(strName)
-            # snakecase to lowerCamelCase
-            # strCamelCase = re.sub(r"_(\w)", repl, strName)
-            print(strName)
+            if "Akronym" in row:
+                strName = str(row['Akronym']).replace("'",'').replace(' ', '')
+                # snakecase to lowerCamelCase
+                # strCamelCase = re.sub(r"_(\w)", repl, strName)
+                # print(strName)
+            if "Zahl" in row:
+                strName = str(row['Zahl'])
+            if "Sprayername" in row:
+                strName = str(row['Sprayername'])
+            else:
+                strName = 'tableItem'+str(num)
+                num = num + 1
 
+            strName = urllib.parse.quote(strName)
             dice = URIRef(ndice+strName)
 
             headingLower = heading.lower().replace(' ', '')
-            strCamelCase = re.sub(r"_(\w)", repl, headingLower)
+            strCamelCase = urllib.parse.quote(re.sub(r"_(\w)", repl, headingLower))
+            print(strCamelCase)
             metapredicate = graffiti[strCamelCase]
             preprocessedValue = row[heading].replace("'",'')
             metaobject = Literal(preprocessedValue,datatype=XSD.string)
@@ -131,7 +142,7 @@ def handleFile():
 
     print('CSV has finished')
 
-reader = pd.read_csv('Übersicht Crews.csv', delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
+# reader = pd.read_csv('Übersicht Crews.csv', delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
 
 def isnan(value):
     try:
@@ -147,10 +158,25 @@ def capitalizeWords(s):
   return re.sub(r'\w+', lambda m:m.group(0).capitalize(), s).replace(" ", "")
 
 
-handleFile()
+# handleFile()
+
+# serilizedRDF = g.serialize(format='turtle')
+# f = open("crews_info_v2.ttl", "w")
+# f.write(serilizedRDF.decode("utf-8"))
+# g = Graph()
+
+
+dirname = sys.argv[1]
+num = 0
+for filename in os.listdir(dirname):
+# handleFile(dirname)
+    print(str(num)+"/"+str(len(os.listdir(dirname))))
+    handleFile(dirname+"/"+filename)
+    num += 1
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("crews_info_v2.ttl", "w")
+f = open("crews_info_test1.ttl", "w")
 f.write(serilizedRDF.decode("utf-8"))
 g = Graph()
+f.close()
 

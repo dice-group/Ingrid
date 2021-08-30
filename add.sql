@@ -6,6 +6,18 @@ delete from DB.DBA.LOAD_LIST;
 
 delete from DB.DBA.LOAD_LIST;
  commit work; 
+ ld_add('/rdfData/rdfCollections.ttl','ingrid');
+ rdf_loader_run();
+ checkpoint;
+
+delete from DB.DBA.LOAD_LIST;
+ commit work; 
+ ld_add('/rdfData/rdfTags.ttl','ingrid');
+ rdf_loader_run();
+ checkpoint;
+
+delete from DB.DBA.LOAD_LIST;
+ commit work; 
  ld_add('/rdfData/crews_merged_v2.ttl','ingrid');
  rdf_loader_run();
  checkpoint;
