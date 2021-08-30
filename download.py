@@ -51,3 +51,12 @@ for x in my_range(0, 130000, 1000):
 #r = requests.post(url, params={'token': token}, json={'offset': 1000})
 #print(r.text)
 
+url = "https://media.uni-paderborn.de/api/v1/tags"
+r = requests.get(url, params={'token': token})
+f = open(pathName+'/jsonfile_tags.json', "w")
+f.write(r.text)
+
+url = "https://media.uni-paderborn.de/api/v1/collection/list"
+r = requests.get(url, params={'token': token})
+f = open(pathName+'/jsonfile_collection_list.json', "w")
+f.write(r.text)

@@ -98,8 +98,12 @@ def handleFile(filename):
 
 		for obj in objects:
 			dice = URIRef(resourse+str(obj["_system_object_id"]))
-			if len(obj['_collections']):
+			if '_collections' in obj and len(obj['_collections']):
 				print(obj['_collections'])
+				collections = obj['_collections']
+				for collection in collections:
+					if "_id" in collection:
+						g.add( (dice, graffiti.hasCollectionId, ndice["collection_"+str(collection['_id'])] ))
 			if '_last_modified' in obj:
 				g.add( (dice, graffiti.lastModified, Literal(obj['_last_modified'],datatype=XSD.dateTime)) )
 			if '_created' in obj:
@@ -108,7 +112,7 @@ def handleFile(filename):
 				tags = obj['_tags']
 				for tag in tags:
 					if "_id" in tag:
-						g.add( (dice, graffiti.hasTagId,  Literal(str(tag['_id']),datatype=XSD.string)) )
+						g.add( (dice, graffiti.hasTagId, ndice["tag_"+str(tag['_id'])] ))
 					if "name" in tag:
 						tagName = tag['_name']['de-DE']
 						g.add( (dice, graffiti.hasTagName,  Literal(tagName,datatype=XSD.string)) )
