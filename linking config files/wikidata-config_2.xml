@@ -10,12 +10,8 @@
         <LABEL>wd</LABEL>
     </PREFIX>
     <PREFIX>
-        <NAMESPACE>https://w3id.org/scholarlydata/ontology/conference-ontology.owl#</NAMESPACE>
+        <NAMESPACE>http://www.w3.org/2002/07/owl#</NAMESPACE>
         <LABEL>owl</LABEL>
-    </PREFIX>
-    <PREFIX>
-        <NAMESPACE>http://www.w3.org/2011/http#</NAMESPACE>
-        <LABEL>http</LABEL>
     </PREFIX>
     <PREFIX>
         <NAMESPACE>http://www.wikidata.org/prop/direct/</NAMESPACE>
