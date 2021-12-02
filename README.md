@@ -26,6 +26,6 @@ python3 toCrewsInfoRdf.py tables_{now}/
 
 ## Dataset Ontology
 ![alt text](https://github.com/dice-group/Ingrid/blob/main/DatasetImage.jpg?raw=true)
-![alt text](https://github.com/dice-group/Ingrid/blob/main/graffiti.onttology.png?raw=true)
+![alt text](https://github.com/dice-group/Ingrid/blob/main/graffitiOnttology.png?raw=true)
 
 
