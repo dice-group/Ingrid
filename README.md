@@ -24,7 +24,7 @@ To generate rdf from tables:
 python3 toCrewsInfoRdf.py tables_{now}/
 ```
 
-## Dataset Image
+## Dataset Ontology
 ![alt text](https://github.com/dice-group/Ingrid/blob/main/DatasetImage.jpg?raw=true)
 
 
