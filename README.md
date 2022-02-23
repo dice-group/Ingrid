@@ -14,7 +14,7 @@ python3 tagsToRdf.py folderName/
 
 folderName/ - the name of the folder that contains json files.
 
-To download taables from wiki:
+To download tables from wiki:
 ```
 python3 parseHTML.py 'link_to_wiki'
 ```
