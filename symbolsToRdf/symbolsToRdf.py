@@ -7,8 +7,6 @@ import os
 import csv
 import pandas as pd
 from collections import OrderedDict, defaultdict
-import pyreadr
-import pycountry
 
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
@@ -25,7 +23,7 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 
@@ -80,7 +78,7 @@ def handleFile():
                 # preprocessedValue.split(',')
                 for a in annotators:
                     a = a.strip()
-                    g.add( (dice, graffiti.annotator, cvdo[a]) )
+                    g.add( (dice, graffiti.hasAnnotator, cvdo[a]) )
                     g.add( (cvdo[a], RDF.type, FOAF.Person) )
                     g.add( (cvdo[a], FOAF.givenName, Literal(a,datatype=XSD.string)) )
 
@@ -89,21 +87,27 @@ def handleFile():
                     longformsOfName = re.split(',',preprocessedValue)
                     for n in longformsOfName:
                         n = n.strip()
-                        g.add( (dice, graffiti.beleg, Literal(n,datatype=XSD.string)) )
+                        g.add( (dice, graffiti.hasReceipt, Literal(n,datatype=XSD.string)) )
 
             if heading == 'Anmerkungen':
-               metapredicate = graffiti.remarks
+               metapredicate = graffiti.hasRemarks
                if 'http' in preprocessedValue:
                     metapredicate = graffiti.hasRemarksURI
                     metaobject = URIRef(preprocessedValue)
+
+            if heading == 'Textfeld':
+                metapredicate=graffiti.hasSymbolText
+
+            if heading == 'ï»¿Symbol':
+                metapredicate=graffiti.hasSymbolFigure
             
             if row[heading] != "" and preprocessedValue != '-' and heading != 'Bearbeiter' and heading != 'Beleg':
-                g.add( (dice, RDF.type, cvdo.Symbol) )
+                g.add( (dice, RDF.type, cvdo.GraffitiSymbol) )
                 g.add( (dice, metapredicate, metaobject) )
 
     print('CSV has finished')
 
-reader = pd.read_csv('symbols.csv', delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
+reader = pd.read_csv('symbols.csv', delimiter="|", keep_default_na=False, encoding = "ISO-8859-1").to_dict('records', into=OrderedDict)
 
 def isnan(value):
     try:
@@ -122,7 +126,6 @@ def capitalizeWords(s):
 handleFile()
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("symbols_v1.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("symbols_v4.ttl", "w", encoding='utf-8')
+f.write(serilizedRDF)
 g = Graph()
-

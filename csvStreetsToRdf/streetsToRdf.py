@@ -7,8 +7,6 @@ import os
 import csv
 import pandas as pd
 from collections import OrderedDict, defaultdict
-import pyreadr
-import pycountry
 
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
@@ -25,7 +23,7 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 
@@ -101,7 +99,6 @@ def capitalizeWords(s):
 handleFile()
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("streetsOfPaderborn.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("streetsOfPaderborn.ttl", "w", encoding='utf-8')
+f.write(serilizedRDF)
 g = Graph()
-

@@ -11,7 +11,7 @@ from collections import OrderedDict, defaultdict
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
 resourse = "https://graffiti.data.dice-research.org/resource/"
-# ndice = Namespace(resourse)
+# ndice = Namespace(resource)
 schema = Namespace("http://schema.org/")
 vcard = Namespace("http://www.w3.org/2006/vcard/ns#")
 bibtex = Namespace("http://purl.org/net/nknouf/ns/bibtex#") 
@@ -24,7 +24,7 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 def handleFile(filename):
@@ -57,10 +57,10 @@ def handleFile(filename):
 
             dice = URIRef(resourse+"collection_"+str(obj["_id"]))
             g.add( (dice, RDF.type, cvdo.Collection) )
-            g.add( (dice, graffiti.collectionName, Literal(obj["displayname"]["de-DE"],datatype=XSD.string)) )
-            g.add( (dice, graffiti.id, Literal(obj["_id"],datatype=XSD.nonNegativeInteger)) )
-            g.add( (dice, graffiti.uuid, Literal(obj["uuid"],datatype=XSD.nonNegativeInteger)) )
-            g.add( (dice, graffiti.createdDate, Literal(elem["_acl"][0]["date_created"],datatype=XSD.dateTime)) )
+            g.add( (dice, graffiti.hasCollectionName, Literal(obj["displayname"]["de-DE"],datatype=XSD.string)) )
+            g.add( (dice, graffiti.hasId, Literal(obj["_id"],datatype=XSD.nonNegativeInteger)) )
+            g.add( (dice, graffiti.hasUuid, Literal(obj["uuid"],datatype=XSD.nonNegativeInteger)) )
+            g.add( (dice, graffiti.hasCreatedDate, Literal(elem["_acl"][0]["date_created"],datatype=XSD.dateTime)) )
     
 
 dirname = sys.argv[1]
@@ -72,7 +72,7 @@ for filename in os.listdir(dirname):
     num += 1
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("rdfCollections.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("rdfCollections.ttl", "w", encoding='utf-8')
+f.write(serilizedRDF)
 g = Graph()
 f.close()

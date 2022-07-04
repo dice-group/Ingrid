@@ -11,7 +11,7 @@ from collections import OrderedDict, defaultdict
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
 resourse = "https://graffiti.data.dice-research.org/resource/"
-# ndice = Namespace(resourse)
+# ndice = Namespace(resource)
 schema = Namespace("http://schema.org/")
 vcard = Namespace("http://www.w3.org/2006/vcard/ns#")
 bibtex = Namespace("http://purl.org/net/nknouf/ns/bibtex#") 
@@ -24,7 +24,7 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 def handleFile(filename):
@@ -57,16 +57,16 @@ def handleFile(filename):
 
             dice = URIRef(resourse+"tagGroup_"+str(elem["taggroup"]["_id"]))
             g.add( (dice, RDF.type, cvdo.TagGroup) )
-            g.add( (dice, graffiti.tagGroupName, Literal(elem["taggroup"]["displayname"]["de-DE"],datatype=XSD.string)) )
-            g.add( (dice, graffiti.id, Literal(elem["taggroup"]["_id"],datatype=XSD.nonNegativeInteger)) )
+            g.add( (dice, graffiti.hasTagGroupName, Literal(elem["taggroup"]["displayname"]["de-DE"],datatype=XSD.string)) )
+            g.add( (dice, graffiti.hasId, Literal(elem["taggroup"]["_id"],datatype=XSD.nonNegativeInteger)) )
             
             for tag in obj:
                 tagId = "tag_"+str(tag["tag"]["_id"])
 
                 g.add( (dice, graffiti.hasTag, ndice[tagId] ))
                 g.add( (ndice[tagId], RDF.type, cvdo.Tag) )
-                g.add( (ndice[tagId], graffiti.tagName, Literal(tag["tag"]["displayname"]["de-DE"],datatype=XSD.string)) )
-                g.add( (ndice[tagId], graffiti.id, Literal(tag["tag"]["_id"],datatype=XSD.nonNegativeInteger)) )
+                g.add( (ndice[tagId], graffiti.hasTagName, Literal(tag["tag"]["displayname"]["de-DE"],datatype=XSD.string)) )
+                g.add( (ndice[tagId], graffiti.hasId, Literal(tag["tag"]["_id"],datatype=XSD.nonNegativeInteger)) )
 
     
 
@@ -79,7 +79,7 @@ for filename in os.listdir(dirname):
     num += 1
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("rdfTags.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("rdfTags.ttl", "w", encoding='utf-8')
+f.write(serilizedRDF)
 g = Graph()
 f.close()

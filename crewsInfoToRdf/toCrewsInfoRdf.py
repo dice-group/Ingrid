@@ -7,8 +7,6 @@ import os
 import csv
 import pandas as pd
 from collections import OrderedDict, defaultdict
-import pyreadr
-import pycountry
 import urllib.parse
 
 g = Graph()
@@ -26,13 +24,13 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 
 def handleFile(filename):
     if filename:
-        reader = pd.read_csv(filename, delimiter="|", keep_default_na=False).to_dict('records', into=OrderedDict)
+        reader = pd.read_csv(filename, delimiter="|", keep_default_na=False, encoding = "ISO-8859-1").to_dict('records', into=OrderedDict)
 
 
     g.namespace_manager.bind("grfr", ndice)
@@ -83,7 +81,7 @@ def handleFile(filename):
 
             headingLower = heading.lower().replace(' ', '')
             strCamelCase = urllib.parse.quote(re.sub(r"_(\w)", repl, headingLower))
-            print(strCamelCase)
+            #print(strCamelCase)
             metapredicate = graffiti[strCamelCase]
             preprocessedValue = row[heading].replace("'",'')
             metaobject = Literal(preprocessedValue,datatype=XSD.string)
@@ -94,15 +92,15 @@ def handleFile(filename):
                 for a in annotators:
                     a = a.strip()
                     a = urllib.parse.quote(a)
-                    g.add( (dice, graffiti.annotator, ndice[a]) )
+                    g.add( (dice, graffiti.hasAnnotator, ndice[a]) )
                     g.add( (ndice[a], RDF.type, FOAF.Person) )
                     g.add( (ndice[a], FOAF.givenName, Literal(a,datatype=XSD.string)) )
 
-            if heading == 'Langform':
+            if heading == 'Langform' or heading == 'Akronym/Langform' or heading=='Akronym / Langform':
                 longformsOfName = re.split(',',preprocessedValue)
                 for n in longformsOfName:
                     n = n.strip()
-                    g.add( (dice, graffiti.longForm, Literal(n,datatype=XSD.string)) )
+                    g.add( (dice, graffiti.hasLongForm, Literal(n,datatype=XSD.string)) )
 
             if heading == 'Mitglieder der Crew':
                 if preprocessedValue != '-':
@@ -123,22 +121,40 @@ def handleFile(filename):
                                 g.add( (ndice[r], RDF.type, cvdo.CrewMember ))
                                 g.add( (ndice[r], RDFS.label, Literal(dl,datatype=XSD.string)) )
 
-            if heading == 'Beleg':
+            if heading == 'Beleg' or heading=='beleg':
                 if preprocessedValue != '-':
                     longformsOfName = re.split(',',preprocessedValue)
                     for n in longformsOfName:
                         n = n.strip()
-                        g.add( (dice, graffiti.beleg, Literal(n,datatype=XSD.string)) )
+                        g.add( (dice, graffiti.hasReceipt, Literal(n,datatype=XSD.string)) )
 
-            if heading == 'Akronym':
-               metapredicate = graffiti.shortForm
+            if heading == 'Akronym' or heading =='Zahl / Abk\\u00fcrzung' or heading =='Zahl/Abk\\u00fcrzung':
+               metapredicate = graffiti.hasShortForm
 
             if heading == 'Anmerkungen':
-               metapredicate = graffiti.remarks
+               metapredicate = graffiti.hasRemarks
+
+            if heading == 'Mitgliedschaft in Crew' or heading =='Crewmitgliedschaften':
+               metapredicate = graffiti.memberOfCrew
+
+            if heading == 'Sprayername':
+               metapredicate = graffiti.hasName
+
+            if heading == 'Bedeutung':
+               metapredicate = graffiti.hasMeaning
+
+            if heading == 'Beispiel':
+               metapredicate = graffiti.hasExample
+
+            if heading == 'Zahl':
+               metapredicate = graffiti.hasNumber
             
-            if row[heading] != "" and preprocessedValue != '-' and heading != 'Bearbeiter' and heading != 'Langform' and heading != 'Mitglieder der Crew' and heading != 'Beleg':
-                g.add( (dice, RDF.type, cvdo.Crew) )
+            if row[heading] != "" and preprocessedValue != '-' and heading != 'Bearbeiter' and heading != 'Langform' and heading != 'Mitglieder der Crew' and heading != 'Beleg'\
+                    and  heading !='beleg' and  heading != 'Akronym/Langform' and heading!='Akronym / Langform':
+                g.add( (dice, RDF.type, cvdo.GraffitiSprayerCrew) )
                 g.add( (dice, metapredicate, metaobject) )
+
+            print(metapredicate)
 
     print('CSV has finished')
 
@@ -175,8 +191,7 @@ for filename in os.listdir(dirname):
     num += 1
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("crews_info_test1.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("crews_info_v4.ttl", "w", encoding="utf8")
+f.write(serilizedRDF)
 g = Graph()
 f.close()
-

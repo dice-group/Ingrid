@@ -11,7 +11,7 @@ from collections import OrderedDict, defaultdict
 g = Graph()
 ontology = "https://graffiti.data.dice-research.org/ontology/"
 resourse = "https://graffiti.data.dice-research.org/resource/"
-# ndice = Namespace(resourse)
+# ndice = Namespace(resource)
 schema = Namespace("http://schema.org/")
 vcard = Namespace("http://www.w3.org/2006/vcard/ns#")
 bibtex = Namespace("http://purl.org/net/nknouf/ns/bibtex#") 
@@ -24,37 +24,51 @@ bibo = Namespace("http://purl.org/ontology/bibo/")
 fabio = Namespace("http://purl.org/spar/fabio/")
 cvdo = Namespace("https://graffiti.data.dice-research.org/ontology/")
 ndice = Namespace("https://graffiti.data.dice-research.org/resource/") #cvdr
-graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti#")
+graffiti = Namespace("https://graffiti.data.dice-research.org/graffiti/")
 FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 translations = {
-    'anmerkungen': 'remarks',
-    'bearbeiter': 'editor',
-    'fundort_strasse': 'locationStreet',
-    'notiz': 'note',
-    'fundort_plz': 'postalCode',
-    'aufnahmedatum': 'recordingDate',
-    'bearbeitungsdatum': 'processingDate',
-    'bestand': 'inventory',
-    'bildebene': 'imageLayer',
-    'buchstabenstil': 'letterStyle',
-    'datei': 'file',
-    'direktionalitaet': 'directionality',
-    'farbe': 'colour',
-    'fundort_stadt': 'locationStadt',
-    'funktion': 'function',
-    'kontext': 'context',
-    'motiv': 'motive',
-    'oberflaeche': 'surface',
-    'sprache': 'language',
-    'sprachliche_konstruktion': 'linguisticConstruction',
-    'stilelement': 'styleElement',
-    'technik': 'technology',
-    'thema': 'theme',
-    'titel': 'title',
-    'traegermedium': 'carrierMedium',
-    'typ': 'type',
-    'zeichentyp': 'characterType'}
+	'anmerkungen': 'hasRemarks',
+	'bearbeiter': 'hasEditor',
+	'fundort_strasse': 'hasLocationStreet',
+	'notiz': 'hasNote',
+	'fundort_plz': 'hasPostalCode',
+	'aufnahmedatum': 'hasRecordingDate',
+	'bearbeitungsdatum': 'hasProcessingDate',
+	'bestand': 'inInventory',
+	'bildebene': 'hasImageLayer',
+	'buchstabenstil': 'hasLetterStyle',
+	'datei': 'file',
+	'direktionalitaet': 'hasDirectionality',
+	'farbe': 'hasColour',
+	'fundort_stadt': 'locationStadt',
+	'funktion': 'hasFunction',
+	'kontext': 'hasContext',
+	'motiv': 'hasMotive',
+	'oberflaeche': 'hasSurface',
+	'sprache': 'hasLanguage',
+	'sprachliche_konstruktion': 'hasLinguisticConstruction',
+	'stilelement': 'hasSyleElement',
+	'technik': 'hasTechnology',
+	'thema': 'hasTheme',
+	'titel': 'hasTitle',
+	'traegermedium': 'hasCarrierMedium',
+	'typ': 'hasType',
+	'zeichentyp': 'hasCharacterType',
+	'eingebettetesgraffiti': 'hasEmbeddedGraffiti',
+	'enthaltene_sprachliche_konstruktion': 'hasLinguisticConstruction',
+	'redakteur': 'hasEditor',
+	'bearbeitungsstand': 'hasProcessingStatus',
+	'id': 'hasId',
+	'version': 'hasVersion',
+	'architektur': 'hasArchitecture',
+	'datierung': 'hasDate',
+	'literatur': 'hasLiterature',
+	'figurenstil': 'hasFigureStyle',
+	'sixomcid': 'hasSixomcid',
+	'sixomcuid': 'hasSixomcuid',
+	'fundortgps': 'hasFundortGPS'
+}
 
 def transalate(word):
     if word in translations:
@@ -97,7 +111,7 @@ def handleFile(filename):
 
     for obj in objects:
         # print(obj)
-        # dice = URIRef(resourse+str(obj["_system_object_id"]))
+        # dice = URIRef(resource+str(obj["_system_object_id"]))
         dice = URIRef(resourse+str(obj["graffiti_sprayercrew"]["name"]))
         if 'graffiti_sprayercrew' in obj:
             graffitiInfo = obj['graffiti_sprayercrew']
@@ -119,6 +133,12 @@ def handleFile(filename):
                             subObj = transalate(subObj)
                             if subObj == 'colour':
                                 subObj = 'hasColour'
+                            if subObj == 'relation':
+                                subObj = 'hasRelation'
+                            if subObj == 'namensvariante':
+                                subObj = 'hasNameVariant'
+                            if subObj == 'taetigkeitsort':
+                                subObj = 'hasPlaceOfActivity'
                             g.add( (dice, graffiti[subObj], Literal(textGraffiti,datatype=XSD.string)) )
                 else: 
                     # print(k)
@@ -137,22 +157,23 @@ def handleFile(filename):
                                 datatype = XSD.date
                                 print(textGraffiti)
                                 textGraffitiFrom = textGraffiti['from']
-                                k1 = k + 'From'
-                                g.add( (dice, graffiti[k1], Literal(textGraffitiFrom,datatype=datatype)) )
+                                k1 = 'hasPeriodOfActivityFrom'
+                                g.add( (dice, graffiti[k1], Literal(textGraffitiFrom,datatype=datatype)))
                                 textGraffitiTo = textGraffiti['to']
-                                k2 = k + 'To'
+                                k2 = 'hasPeriodOfActivityTo'
                                 g.add( (dice, graffiti[k2], Literal(textGraffitiTo,datatype=datatype)) )
                             else:  
                                 if k == 'originalfoto':
                                     datatype = XSD.boolean
-                                else:  
+                                else:
                                     datatype = XSD.string
+
                         if k not in exclusions:
                             k = transalate(k)
                             if k == 'locationStadt':
                                 state = textGraffiti.split(',')[0]
                                 g.add( (dice, graffiti.hasLocation, ndice[state]) )
-                                g.add( (ndice[state], RDF.type, cvdo.State) )
+                                g.add( (ndice[state], RDF.type, cvdo.City) )
                                 g.add( (ndice[state], RDFS.label, Literal(textGraffiti,datatype=datatype)) )
                             else:
                                 # datei
@@ -175,13 +196,23 @@ def handleFile(filename):
                                             g.add( (ndice[imageIdObj], graffiti.hasUri, URIRef(versions[v]['url'])) )
                                             g.add( (ndice[imageIdObj], schema.width, Literal(versions[v]['width'],datatype=XSD.nonNegativeInteger)) )
                                             g.add( (ndice[imageIdObj], schema.height, Literal(versions[v]['height'],datatype=XSD.nonNegativeInteger)) )
-                                            g.add( (ndice[imageIdObj], graffiti.extension, Literal(versions[v]['extension'],datatype=XSD.string)) )
-                                            g.add( (ndice[imageIdObj], graffiti.aspect_ratio, Literal(versions[v]['aspect_ratio'],datatype=XSD.float)) )
+                                            g.add( (ndice[imageIdObj], graffiti.hasExtension, Literal(versions[v]['extension'],datatype=XSD.string)) )
+                                            g.add( (ndice[imageIdObj], graffiti.hasAspectRatio, Literal(versions[v]['aspect_ratio'],datatype=XSD.float)) )
 
                                 else:
                                     k = k.replace('_', '')
                                     if k == 'text':
                                         k = 'hasText'
+                                    if k == 'anmerkungen':
+                                        k = 'hasRemarks'
+                                    if k == 'namelangform':
+                                        k = 'hasLongNameForm'
+                                    if k == 'name':
+                                        k = 'hasName'
+                                    if k == 'id':
+                                        k='hasId'
+                                    if k == 'version':
+                                        k = 'hasVersion'
                                     g.add( (dice, graffiti[k], Literal(textGraffiti,datatype=datatype)) )
 
  
@@ -223,6 +254,6 @@ def handleFile(filename):
 handleFile('spayercrews145633-145740@16184ddb-0cf4-44cf-a00e-d6800d28c027.json')
 
 serilizedRDF = g.serialize(format='turtle')
-f = open("spayercrews_v2.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+f = open("spayercrews_v4.ttl", "w", encoding='utf-8')
+f.write(serilizedRDF)
 g = Graph()

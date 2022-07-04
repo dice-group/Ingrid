@@ -44,7 +44,7 @@ for x in my_range(0, 130000, 1000):
      r = requests.post(url, params={'token': token}, json={'offset': x})
      #print(r.text)
 
-     f = open(pathName+'/jsonfile'+str(num)+'.json', "w")
+     f = open(pathName+'/jsonfile'+str(num)+'.json', "w", encoding="utf8")
      f.write(r.text)
      num = num + 1
 
@@ -53,10 +53,10 @@ for x in my_range(0, 130000, 1000):
 
 url = "https://media.uni-paderborn.de/api/v1/tags"
 r = requests.get(url, params={'token': token})
-f = open(pathName+'/jsonfile_tags.json', "w")
+f = open(pathName+'/jsonfile_tags.json', "w", encoding="utf8")
 f.write(r.text)
 
 url = "https://media.uni-paderborn.de/api/v1/collection/list"
 r = requests.get(url, params={'token': token})
-f = open(pathName+'/jsonfile_collection_list.json', "w")
+f = open(pathName+'/jsonfile_collection_list.json', "w", encoding="utf8")
 f.write(r.text)

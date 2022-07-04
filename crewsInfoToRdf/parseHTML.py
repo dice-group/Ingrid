@@ -44,7 +44,7 @@ DATA = R
 # print(DATA.text)
 ######################################
 
-url = sys.argv[1]
+#url = sys.argv[1]
 url = 'https://wikis.uni-paderborn.de/graffiti/api.php?action=parse&page=Informationen_zu_den_Namen_(Pseudonymen)&format=json'
 # url = 'https://wikis.uni-paderborn.de/graffiti/Informationen_zu_den_Namen_(Pseudonymen)'
 response=S.get(url)
