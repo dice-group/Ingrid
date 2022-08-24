@@ -138,12 +138,12 @@ def handleFile(filename):
 							if len(graffitiInfo[k]) != 0:
 								for elem in graffitiInfo[k]:
 									for subObj in elem.keys():
-									   textGraffiti = elem[subObj]['_standard']['1']['text']['de-DE']
-									   subObj = translate(subObj)
-									   if subObj == 'sprayercrew':
-										   g.add((dice, RDFS.label, Literal(textGraffiti, datatype=XSD.string)))
-									   else:
-										   g.add((dice, graffiti[subObj], Literal(textGraffiti, datatype=XSD.string)))
+										textGraffiti = elem[subObj]['_standard']['1']['text']['de-DE']
+										subObj = translate(subObj)
+										if subObj == 'sprayercrew':
+											g.add((dice, RDFS.label, Literal(textGraffiti, datatype=XSD.string)))
+										else:
+											g.add((dice, graffiti[subObj], Literal(textGraffiti, datatype=XSD.string)))
 					else: 
 						# print(k)
 						if '_standard' in str(graffitiInfo[k]):
@@ -175,19 +175,18 @@ def handleFile(filename):
 									g.add((ndice[city], RDFS.label, Literal(textGraffiti, datatype=datatype)))
 								else:
 									if k == 'editor':
-										if k == 'editor':
-											name_arr = textGraffiti.split(";")
-											for annotator in name_arr:
-												annotator = annotator.strip()
-												anno_resource = annotator.replace(" ", "")
-												g.add((dice, graffiti.hasAnnotator, ndice[anno_resource]))
-												g.add((ndice[anno_resource], RDF.type, FOAF.Person))
-												names = annotator.split(" ")
-												if len(names) == 2:
-													g.add((ndice[anno_resource], FOAF.firstName, Literal(names[0], datatype=datatype)))
-													g.add((ndice[anno_resource], FOAF.lastName, Literal(names[1], datatype=datatype)))
-												else:
-													g.add((ndice[anno_resource], FOAF.givenName, Literal(names[0], datatype=datatype)))
+										name_arr = textGraffiti.split(";")
+										for annotator in name_arr:
+											annotator = annotator.strip()
+											anno_resource = annotator.replace(" ", "")
+											g.add((dice, graffiti.hasAnnotator, ndice[anno_resource]))
+											g.add((ndice[anno_resource], RDF.type, FOAF.Person))
+											names = annotator.split(" ")
+											if len(names) == 2:
+												g.add((ndice[anno_resource], FOAF.firstName, Literal(names[0], datatype=datatype)))
+												g.add((ndice[anno_resource], FOAF.lastName, Literal(names[1], datatype=datatype)))
+											else:
+												g.add((ndice[anno_resource], FOAF.givenName, Literal(names[0], datatype=datatype)))
 									if k == 'spruehercrew':
 										crewArr = textGraffiti.split('|')
 										for crew in crewArr:
