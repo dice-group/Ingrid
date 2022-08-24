@@ -25,7 +25,7 @@ FOAF = Namespace('http://xmlns.com/foaf/0.1/')
 
 translations = {
 	'anmerkungen': 'hasRemarks',
-	'bearbeiter': 'hasEditor',
+	'bearbeiter': 'editor',
 	'fundort_strasse': 'hasLocationStreet',
 	'notiz': 'hasNote',
 	'fundort_plz': 'hasPostalCode',
@@ -53,7 +53,7 @@ translations = {
 	'zeichentyp': 'hasCharacterType',
 	'eingebettetesgraffiti': 'hasEmbeddedGraffiti',
 	'enthaltene_sprachliche_konstruktion': 'hasLinguisticConstruction',
-	'redakteur': 'hasEditor',
+	'redakteur': 'editor',
 	'bearbeitungsstand': 'hasProcessingStatus',
 	'id': 'hasId',
 	'version': 'hasVersion',
@@ -175,15 +175,19 @@ def handleFile(filename):
 									g.add((ndice[city], RDFS.label, Literal(textGraffiti, datatype=datatype)))
 								else:
 									if k == 'editor':
-										annotator = textGraffiti.replace(" ","")
-										g.add((dice, graffiti.hasAnnotator, ndice[annotator]))
-										g.add((ndice[annotator], RDF.type, FOAF.Person))
-										nameArr = textGraffiti.split(" ")
-										if len(nameArr) == 2:
-											g.add((ndice[annotator], FOAF.firstName, Literal(nameArr[0],datatype=datatype)))
-											g.add((ndice[annotator], FOAF.lastName, Literal(nameArr[1],datatype=datatype)))
-										else:
-											g.add((ndice[annotator], FOAF.givenName, Literal(nameArr[0],datatype=datatype)))
+										if k == 'editor':
+											name_arr = textGraffiti.split(";")
+											for annotator in name_arr:
+												annotator = annotator.strip()
+												anno_resource = annotator.replace(" ", "")
+												g.add((dice, graffiti.hasAnnotator, ndice[anno_resource]))
+												g.add((ndice[anno_resource], RDF.type, FOAF.Person))
+												names = annotator.split(" ")
+												if len(names) == 2:
+													g.add((ndice[anno_resource], FOAF.firstName, Literal(names[0], datatype=datatype)))
+													g.add((ndice[anno_resource], FOAF.lastName, Literal(names[1], datatype=datatype)))
+												else:
+													g.add((ndice[anno_resource], FOAF.givenName, Literal(names[0], datatype=datatype)))
 									if k == 'spruehercrew':
 										crewArr = textGraffiti.split('|')
 										for crew in crewArr:
@@ -239,56 +243,19 @@ def handleFile(filename):
 
 											else:
 												k = translate(k)
-												if not 'has' in k and not 'in' in k:
+												if 'has' not in k and 'in' not in k:
 													print(k)
 												g.add((dice, graffiti[k], Literal(textGraffiti,datatype=datatype)))
 
-	 
-
-	# schema.author
-
-
-	
-	# # sameAs linking
-	# if pmcid:
-	#     g.add( (dice, OWL.sameAs, URIRef("http://ns.inria.fr/covid19/"+pmcid)) )
-	#     g.add( (dice, OWL.sameAs, URIRef("https://www.ncbi.nlm.nih.gov/pmc/articles/"+pmcid)) )
-	# if sha:
-	#     g.add( (dice, OWL.sameAs, URIRef("http://ns.inria.fr/covid19/"+sha)) )    
-	#     g.add( (dice, OWL.sameAs, URIRef("http://pubannotation.org/docs/sourcedb/CORD-19/sourceid/"+sha)) )
-	#     g.add( (dice, OWL.sameAs, URIRef("https://data.linkeddatafragments.org/covid19?object=http%3A%2F%2Fidlab.github.io%2Fcovid19%23"+sha)) )
-	#     g.add( (dice, OWL.sameAs, URIRef("https://fhircat.org/cord-19/fhir/PMC/Composition/"+sha+".ttl")) )
-	#     g.add( (dice, RDFS.seeAlso, URIRef("https://fhircat.org/cord-19/fhir/PMC/Composition/"+sha+".json")) )
-
-
-	# # the provenance
-	# g.add( (dice, prov.hadPrimarySource, ndice.cord19Dataset) )
-	# g.add( (ndice.cord19Dataset, RDF.type, prov.Entity) )
-	# g.add( (ndice.cord19Dataset, prov.generatedAtTime, Literal("2020-05-21T02:52:02Z",datatype=XSD.dateTime)) )
-	# g.add( (ndice.cord19Dataset, prov.wasDerivedFrom, Literal("https://ai2-semanticscholar-cord-19.s3-us-west-2.amazonaws.com/latest/document_parses.tar.gz",datatype=XSD.string)) )
-  
-	#
-		# if title:
-		#     g.add( (dice, DCTERMS.title, Literal(title.strip().replace("\n",""),datatype=XSD.string)) )
-		# g.add( (dice, RDF.type, swc.Paper) )
-		# g.add( (dice, RDF.type, fabio.ResearchPaper) )
-		# g.add( (dice, RDF.type, bibo.AcademicArticle) )
-		# g.add( (dice, RDF.type, schema.ScholarlyArticle) )
-		# addAuthors(authors, dice)
 
 dirname = sys.argv[1]
 num = 0
 for filename in os.listdir(dirname):
-# handleFile(dirname)
 	print(str(num)+"/"+str(len(os.listdir(dirname))))
 	handleFile(dirname+"/"+filename)
 	num += 1
-
-#handleFile('graffiti_v3.json')
-
-serilizedRDF = g.serialize(format='turtle')
-f = open("rdfGraffiti.ttl", "w")
-# f = open("rdfGraffiti_v5.ttl", "w")
-f.write(serilizedRDF.decode("utf-8"))
+serializedRDF = g.serialize(format='turtle')
+f = open("rdfGraffiti.ttl", "w", encoding='utf8')
+f.write(serializedRDF)
 g = Graph()
 f.close()
